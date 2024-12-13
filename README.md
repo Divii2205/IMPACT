@@ -2,7 +2,7 @@
 
 ## Overview
 
-Review Analyzer is a Chrome extension that helps users identify potentially fake or suspicious reviews on Google Maps and other Google platforms. The extension uses an intelligent algorithm to classify reviews and provide visual feedback about their authenticity.
+TruthTales is a Review Analyzer Chrome extension that helps users identify potentially fake or suspicious reviews on Google Maps and other Google platforms. The extension uses an intelligent algorithm to classify reviews and provide visual feedback about their authenticity.
 
 ## Features
 
