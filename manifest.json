@@ -1,0 +1,34 @@
+{
+    "manifest_version": 3,
+    "name": "Review Analyzer",
+    "version": "2.0",
+    "description": "Analyzes and highlights Google Reviews",
+    "permissions": ["activeTab", "storage"],
+    "action": {
+      "default_popup": "popup.html",
+      "default_icon": {
+        "16": "icon16.png",
+        "48": "icon48.png",
+        "128": "icon128.png"
+      }
+    },
+    "icons": {
+      "16": "icon16.png",
+      "48": "icon48.png",
+      "128": "icon128.png"
+    },
+    "content_scripts": [
+      {
+        "matches": [
+          "https://www.google.com/maps/*",
+          "https://www.google.com/travel/hotels/*",
+          "https://www.google.com/*"
+
+        ],
+        "js": ["content.js"],
+        "run_at": "document_end"
+      }
+    ]
+  }
+  
+  
