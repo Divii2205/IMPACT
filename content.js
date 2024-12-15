@@ -1,10 +1,9 @@
 console.log('Content script loaded');
 
 // Function to generate a random classification (for demonstration purposes)
-function getRandomClassification() {
-  const rand = Math.random();
-  if (rand < 0.2) return 'fake';
-  if (rand < 0.3) return 'not sure';
+function analyzeReview(review) {
+  if (review.length < 20) return 'not sure';
+  if (review.length < 50) return 'fake';
   return 'real';
 }
 
@@ -39,11 +38,12 @@ function getReasoningForClassification(classification) {
 // Function to highlight reviews
 function highlightReviews() {
   console.log('Highlighting reviews');
-  const reviews = document.querySelectorAll('.wiI7pd, .OA1nbd');
+  const reviews = document.querySelectorAll('.wiI7pd, .OA1nbd');  
   console.log('Found reviews:', reviews.length);
   
   reviews.forEach(review => {
-    const classification = getRandomClassification();
+    
+    const classification = analyzeReview(review.textContent);
     const color = getColorForClassification(classification);
     const reasoning = getReasoningForClassification(classification);
 
