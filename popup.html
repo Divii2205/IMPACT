@@ -4,65 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Review Analyzer</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: Arial, sans-serif;
             width: 300px;
-            padding: 20px;
-            background-color: #f5f5f5;
+            padding: 16px;
+            background-color: #f0f0f0;
         }
         .container {
-            background-color: white;
+            background-color: #ffffff;
             border-radius: 8px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         h1 {
-            font-size: 24px;
+            font-size: 18px;
+            margin-bottom: 16px;
             color: #333;
-            margin-bottom: 20px;
-            text-align: center;
+        }
+        p {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 12px;
         }
         button {
-            background-color: #4CAF50;
-            border: none;
+            background-color: #4285f4;
             color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: block;
-            font-size: 16px;
-            margin: 0 auto 20px;
+            border: none;
+            padding: 8px 16px;
+            font-size: 14px;
+            border-radius: 4px;
             cursor: pointer;
-            border-radius: 4px;
-            transition: background-color 0.3s;
+            width: 100%;
         }
-        button:hover {
-            background-color: #45a049;
-        }
-        #summary {
-            background-color: #e9e9e9;
-            border-radius: 4px;
-            padding: 15px;
-            margin-top: 20px;
-        }
-        #summary h2 {
-            font-size: 18px;
-            color: #333;
-            margin-bottom: 10px;
-        }
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 10px;
-        }
-        .label {
-            font-weight: bold;
-            color: #555;
+        button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
         .hidden {
             display: none;
+        }
+        #results p {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        #results p::before {
+            content: '';
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+        #results p:nth-child(1)::before {
+            background-color: #ff4444;
+        }
+        #results p:nth-child(2)::before {
+            background-color: #ffbb33;
+        }
+        #results p:nth-child(3)::before {
+            background-color: #00C851;
         }
     </style>
 </head>
@@ -72,21 +74,13 @@
         <button id="startAnalysis">Start Analysis</button>
         <div id="summary" class="hidden">
             <h2>Analysis Summary</h2>
-            <div class="summary-item">
-                <span class="label">Real:</span>
-                <span id="realPercentage"></span>
-            </div>
-            <div class="summary-item">
-                <span class="label">Fake:</span>
-                <span id="fakePercentage"></span>
-            </div>
-            <div class="summary-item">
-                <span class="label">Not Sure:</span>
-                <span id="notSurePercentage"></span>
+            <div id="results">
+                <p>Real: <span id="realPercentage"></span></p>
+                <p>Fake: <span id="fakePercentage"></span></p>
+                <p>Not Sure: <span id="notSurePercentage"></span></p>
             </div>
         </div>
     </div>
     <script src="popup.js"></script>
 </body>
 </html>
-
