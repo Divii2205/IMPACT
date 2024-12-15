@@ -1,21 +1,22 @@
 console.log('Content script loaded');
-
 // Function to generate a random classification (for demonstration purposes)
 function analyzeReview(review) {
+  console.log(review.length);
+  
   if (review.length < 20) return 'not sure';
   if (review.length < 50) return 'fake';
   return 'real';
 }
 
 // Function to get color based on classification
-function getColorForClassification(classification) {
+function getColorForClassification(classification) {  
   switch (classification) {
     case 'fake':
-      return 'rgba(255, 0, 0, 0.2)'; // Red
+      return 'rgba(255, 0, 0, 0.35)'; // Red
     case 'not sure':
-      return 'rgba(255, 255, 0, 0.2)'; // Yellow
+      return 'rgba(255, 255, 0, 0.37)'; // Yellow
     case 'real':
-      return 'rgba(0, 255, 0, 0.2)'; // Green
+      return 'rgba(0, 255, 0, 0.32)'; // Green
     default:
       return 'transparent';
   }
@@ -38,16 +39,18 @@ function getReasoningForClassification(classification) {
 // Function to highlight reviews
 function highlightReviews() {
   console.log('Highlighting reviews');
-  const reviews = document.querySelectorAll('.wiI7pd, .OA1nbd');  
+  const reviews = document.querySelectorAll('.wiI7pd, .OA1nbd, .d5K5Pd');  
   console.log('Found reviews:', reviews.length);
   
   reviews.forEach(review => {
     
     const classification = analyzeReview(review.textContent);
+    console.log(classification);
+    
     const color = getColorForClassification(classification);
     const reasoning = getReasoningForClassification(classification);
 
-    console.log('Highlighting review:', review, 'with color:', color);
+    // console.log('Highlighting review:', review, 'with color:', color);
 
     review.style.backgroundColor = color;
     review.style.transition = 'background-color 0.3s';
@@ -61,6 +64,7 @@ function highlightReviews() {
     `;
     hoverElement.style.cssText = `
       position: absolute;
+      color: black;
       background-color: white;
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -68,7 +72,7 @@ function highlightReviews() {
       box-shadow: 0 2px 5px rgba(0,0,0,0.2);
       display: none;
       z-index: 1000;
-      max-width: 300px;
+      width: 300px;
       top: 100%;
       left: 0;
     `;
@@ -110,30 +114,30 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('Message received:', request);
   if (request.action === "highlightReviews") {
     highlightReviews();
+    // Observe for dynamically loaded reviews
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.type === 'childList') {
+          const addedNodes = mutation.addedNodes;
+          for (let i = 0; i < addedNodes.length; i++) {
+            const node = addedNodes[i];
+            if (node.nodeType === Node.ELEMENT_NODE && (node.classList.contains('wiI7pd') || node.classList.contains('OA1nbd') || node.classList.contains('d5K5Pd'))) {
+              console.log('New review detected, highlighting');
+              highlightReviews();
+              break;
+            }
+          }
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
+
     sendResponse({status: "Highlighting complete"});
   }
   return true;
-});
-
-// Observe for dynamically loaded reviews
-const observer = new MutationObserver((mutations) => {
-  mutations.forEach((mutation) => {
-    if (mutation.type === 'childList') {
-      const addedNodes = mutation.addedNodes;
-      for (let i = 0; i < addedNodes.length; i++) {
-        const node = addedNodes[i];
-        if (node.nodeType === Node.ELEMENT_NODE && (node.classList.contains('jftiEf') || node.classList.contains('gws-localreviews__google-review'))) {
-          console.log('New review detected, highlighting');
-          highlightReviews();
-          break;
-        }
-      }
-    }
-  });
-});
-
-observer.observe(document.body, {
-  childList: true,
-  subtree: true
 });
 
