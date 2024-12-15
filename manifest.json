@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
-    "name": "Review Analyzer",
-    "version": "2.0",
+    "name": "Truth Tales",
+    "version": "2.2",
     "description": "Analyzes and highlights Google Reviews",
     "permissions": ["activeTab", "storage"],
     "action": {
