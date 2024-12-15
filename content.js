@@ -1,4 +1,9 @@
 console.log('Content script loaded');
+let reviewCounts = {
+  REAL: 0,
+  FAKE: 0,
+  SUSPICIOUS: 0
+};
 // Function to generate a random classification (for demonstration purposes)
 function analyzeReview(review) {
   console.log(review.length);
@@ -41,13 +46,15 @@ function highlightReviews() {
   console.log('Highlighting reviews');
   const reviews = document.querySelectorAll('.wiI7pd, .OA1nbd, .d5K5Pd');
   console.log('Found reviews:', reviews.length);
-  
+
   reviews.forEach(review => {
     if (review.classList.contains('processed')) return;
 
     const classification = analyzeReview(review.textContent);
     console.log(classification);
     
+    reviewCounts[classification]++;
+
     const reasoning = getReasoningForClassification(classification);
     const color = getColorForClassification(classification);
     
@@ -108,8 +115,11 @@ function highlightReviews() {
       alert('Review reported!');
     });
   });
+  chrome.runtime.sendMessage({
+    action: "updateCounts",
+    counts: reviewCounts
+  });
 }
-
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   console.log('Message received:', request);
@@ -137,7 +147,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       subtree: true
     });
 
-    sendResponse({status: "Highlighting complete"});
+    sendResponse({status: "Highlighting complete", counts: reviewCounts});
   }
   return true;
 });
