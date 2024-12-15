@@ -3,19 +3,19 @@ console.log('Content script loaded');
 function analyzeReview(review) {
   console.log(review.length);
   
-  if (review.length < 20) return 'not sure';
-  if (review.length < 50) return 'fake';
-  return 'real';
+  if (review.length < 20) return 'SUSPICIOUS';
+  if (review.length < 50) return 'FAKE';
+  return 'REAL';
 }
 
 // Function to get color based on classification
-function getColorForClassification(classification) {  
+function getColorForClassification(classification) {
   switch (classification) {
-    case 'fake':
+    case 'FAKE':
       return 'rgba(255, 0, 0, 0.35)'; // Red
-    case 'not sure':
+    case 'SUSPICIOUS':
       return 'rgba(255, 255, 0, 0.37)'; // Yellow
-    case 'real':
+    case 'REAL':
       return 'rgba(0, 255, 0, 0.32)'; // Green
     default:
       return 'transparent';
@@ -25,11 +25,11 @@ function getColorForClassification(classification) {
 // Function to get reasoning based on classification
 function getReasoningForClassification(classification) {
   switch (classification) {
-    case 'fake':
+    case 'FAKE':
       return 'This review has been flagged as potentially fake due to suspicious patterns in the text or user behavior.';
-    case 'not sure':
+    case 'SUSPICIOUS':
       return 'Our system is uncertain about the authenticity of this review. It may require further investigation.';
-    case 'real':
+    case 'REAL':
       return 'This review appears to be genuine based on our analysis.';
     default:
       return 'No classification available for this review.';
@@ -39,21 +39,22 @@ function getReasoningForClassification(classification) {
 // Function to highlight reviews
 function highlightReviews() {
   console.log('Highlighting reviews');
-  const reviews = document.querySelectorAll('.wiI7pd, .OA1nbd, .d5K5Pd');  
+  const reviews = document.querySelectorAll('.wiI7pd, .OA1nbd, .d5K5Pd');
   console.log('Found reviews:', reviews.length);
   
   reviews.forEach(review => {
-    
+    if (review.classList.contains('processed')) return;
+
     const classification = analyzeReview(review.textContent);
     console.log(classification);
     
-    const color = getColorForClassification(classification);
     const reasoning = getReasoningForClassification(classification);
-
-    // console.log('Highlighting review:', review, 'with color:', color);
-
+    const color = getColorForClassification(classification);
+    
+    review.classList.add('processed');
     review.style.backgroundColor = color;
     review.style.transition = 'background-color 0.3s';
+    review.style.position = 'relative';
 
     const hoverElement = document.createElement('div');
     hoverElement.className = 'review-hover-info';
@@ -62,6 +63,7 @@ function highlightReviews() {
       <p>${reasoning}</p>
       <button class="report-button">Report</button>
     `;
+
     hoverElement.style.cssText = `
       position: absolute;
       color: black;
@@ -76,7 +78,6 @@ function highlightReviews() {
       top: 100%;
       left: 0;
     `;
-    review.style.position = 'relative';
     review.appendChild(hoverElement);
 
     review.addEventListener('mouseenter', () => {
@@ -140,4 +141,3 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   }
   return true;
 });
-
